@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Conta Hexagonal Api
+  title: transfer System Api
   description: API simples para transferencias.
 servers:
   - url: http://localhost:8080
@@ -51,25 +51,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/BadRequestError'
         '404':
           description: Recurso nao encontrado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/NotFoundError'
         '422':
           description: Entidade nao processavel
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/UnprocessableEntityError'
         '500':
           description: Erro interno do sistema
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/InternalServerError'
   /contas:
     get:
       tags:
@@ -106,19 +106,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/BadRequestError'
         '404':
           description: Recurso nao encontrado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/NotFoundError'
         '500':
           description: Erro interno do sistema
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/InternalServerError'
   /contas/{id}:
     get:
       tags:
@@ -146,25 +146,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/BadRequestError'
         '404':
           description: Recurso nao encontrado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/NotFoundError'
         '422':
           description: Entidade nao processavel
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/UnprocessableEntityError'
         '500':
           description: Erro interno do sistema
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomException'
+                $ref: '#/components/schemas/InternalServerError'
 components:
   schemas:
     AccountTransferRequest:
@@ -175,29 +175,16 @@ components:
           description: Valor da transferencia
           example: 10
       description: Valor da transferencia
-    CustomException:
+    BadRequestError:
       type: object
       properties:
         timestamp:
           type: string
-          description: Data e hora do erro
+          description: Error Datetime
           format: date-time
-        statusCode:
-          type: integer
-          description: Codigo do erro
-          format: int32
-          example: 404
-        statusDescription:
-          type: string
-          description: Descricao do status HTTP
-          example: Not Found
-        exception:
-          type: string
-          description: Excecao lancada
-          example: Exception
         messages:
           type: array
-          description: Lista de mensagens de erro
+          description: List of error messages
           example:
             - object: Transfer
               field: value
@@ -206,9 +193,22 @@ components:
             $ref: '#/components/schemas/ErrorMessage'
         path:
           type: string
-          description: Path da chamada que ocasionou o erro
+          description: Path of the call that caused the error
           example: \path
-      description: Resposta de erro da API
+        statusCode:
+          type: integer
+          description: Status code
+          format: int32
+          example: 400
+        statusDescription:
+          type: string
+          description: Status Description
+          example: Invalid request
+        exception:
+          type: string
+          description: Thrown exception
+          example: BadRequestException
+      description: Bad request error response
     ErrorMessage:
       type: object
       properties:
@@ -224,11 +224,113 @@ components:
           type: string
           description: Mensagem de erro
           example: deve ser maior que zero
-      description: Lista de mensagens de erro
+      description: List of error messages
       example:
         - object: Transfer
           field: value
           message: deve ser maior que zero
+    InternalServerError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Error Datetime
+          format: date-time
+        messages:
+          type: array
+          description: List of error messages
+          example:
+            - object: Transfer
+              field: value
+              message: deve ser maior que zero
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+        path:
+          type: string
+          description: Path of the call that caused the error
+          example: \path
+        statusCode:
+          type: integer
+          description: Status code
+          format: int32
+          example: 500
+        statusDescription:
+          type: string
+          description: Status Description
+          example: Internal server error
+        exception:
+          type: string
+          description: Thrown exception
+          example: internalServerErrorException
+      description: Internal server error response
+    UnprocessableEntityError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Error Datetime
+          format: date-time
+        messages:
+          type: array
+          description: List of error messages
+          example:
+            - object: Transfer
+              field: value
+              message: deve ser maior que zero
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+        path:
+          type: string
+          description: Path of the call that caused the error
+          example: \path
+        statusCode:
+          type: integer
+          description: Status code
+          format: int32
+          example: 422
+        statusDescription:
+          type: string
+          description: Status Description
+          example: Unprocessable entity
+        exception:
+          type: string
+          description: Thrown exception
+          example: UnprocessableEntityException
+      description: UI Unprocessable entity error response
+    NotFoundError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Error Datetime
+          format: date-time
+        messages:
+          type: array
+          description: List of error messages
+          example:
+            - object: Transfer
+              field: value
+              message: deve ser maior que zero
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+        path:
+          type: string
+          description: Path of the call that caused the error
+          example: \path
+        statusCode:
+          type: integer
+          description: Status code
+          format: int32
+          example: 404
+        statusDescription:
+          type: string
+          description: Status Description
+          example: Resource not found
+        exception:
+          type: string
+          description: Thrown exception
+          example: NotFoundException
+      description: Not found error response
     AccountHolderResponse:
       type: object
       properties:

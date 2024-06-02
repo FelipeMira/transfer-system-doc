@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Conta Hexagonal Api",
+    "title": "transfer System Api",
     "description": "API simples para transferencias."
   },
   "servers": [
@@ -77,7 +77,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/BadRequestError"
                 }
               }
             }
@@ -87,7 +87,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -97,7 +97,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/UnprocessableEntityError"
                 }
               }
             }
@@ -107,7 +107,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -163,7 +163,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/BadRequestError"
                 }
               }
             }
@@ -173,7 +173,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -183,7 +183,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -227,7 +227,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/BadRequestError"
                 }
               }
             }
@@ -237,7 +237,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -247,7 +247,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/UnprocessableEntityError"
                 }
               }
             }
@@ -257,7 +257,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomException"
+                  "$ref": "#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -279,33 +279,17 @@
         },
         "description": "Valor da transferencia"
       },
-      "CustomException": {
+      "BadRequestError": {
         "type": "object",
         "properties": {
           "timestamp": {
             "type": "string",
-            "description": "Data e hora do erro",
+            "description": "Error Datetime",
             "format": "date-time"
-          },
-          "statusCode": {
-            "type": "integer",
-            "description": "Codigo do erro",
-            "format": "int32",
-            "example": 404
-          },
-          "statusDescription": {
-            "type": "string",
-            "description": "Descricao do status HTTP",
-            "example": "Not Found"
-          },
-          "exception": {
-            "type": "string",
-            "description": "Excecao lancada",
-            "example": "Exception"
           },
           "messages": {
             "type": "array",
-            "description": "Lista de mensagens de erro",
+            "description": "List of error messages",
             "example": [
               {
                 "object": "Transfer",
@@ -319,11 +303,27 @@
           },
           "path": {
             "type": "string",
-            "description": "Path da chamada que ocasionou o erro",
+            "description": "Path of the call that caused the error",
             "example": "\\path"
+          },
+          "statusCode": {
+            "type": "integer",
+            "description": "Status code",
+            "format": "int32",
+            "example": 400
+          },
+          "statusDescription": {
+            "type": "string",
+            "description": "Status Description",
+            "example": "Invalid request"
+          },
+          "exception": {
+            "type": "string",
+            "description": "Thrown exception",
+            "example": "BadRequestException"
           }
         },
-        "description": "Resposta de erro da API"
+        "description": "Bad request error response"
       },
       "ErrorMessage": {
         "type": "object",
@@ -344,7 +344,7 @@
             "example": "deve ser maior que zero"
           }
         },
-        "description": "Lista de mensagens de erro",
+        "description": "List of error messages",
         "example": [
           {
             "object": "Transfer",
@@ -352,6 +352,144 @@
             "message": "deve ser maior que zero"
           }
         ]
+      },
+      "InternalServerError": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "Error Datetime",
+            "format": "date-time"
+          },
+          "messages": {
+            "type": "array",
+            "description": "List of error messages",
+            "example": [
+              {
+                "object": "Transfer",
+                "field": "value",
+                "message": "deve ser maior que zero"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ErrorMessage"
+            }
+          },
+          "path": {
+            "type": "string",
+            "description": "Path of the call that caused the error",
+            "example": "\\path"
+          },
+          "statusCode": {
+            "type": "integer",
+            "description": "Status code",
+            "format": "int32",
+            "example": 500
+          },
+          "statusDescription": {
+            "type": "string",
+            "description": "Status Description",
+            "example": "Internal server error"
+          },
+          "exception": {
+            "type": "string",
+            "description": "Thrown exception",
+            "example": "internalServerErrorException"
+          }
+        },
+        "description": "Internal server error response"
+      },
+      "UnprocessableEntityError": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "Error Datetime",
+            "format": "date-time"
+          },
+          "messages": {
+            "type": "array",
+            "description": "List of error messages",
+            "example": [
+              {
+                "object": "Transfer",
+                "field": "value",
+                "message": "deve ser maior que zero"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ErrorMessage"
+            }
+          },
+          "path": {
+            "type": "string",
+            "description": "Path of the call that caused the error",
+            "example": "\\path"
+          },
+          "statusCode": {
+            "type": "integer",
+            "description": "Status code",
+            "format": "int32",
+            "example": 422
+          },
+          "statusDescription": {
+            "type": "string",
+            "description": "Status Description",
+            "example": "Unprocessable entity"
+          },
+          "exception": {
+            "type": "string",
+            "description": "Thrown exception",
+            "example": "UnprocessableEntityException"
+          }
+        },
+        "description": "UI Unprocessable entity error response"
+      },
+      "NotFoundError": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "Error Datetime",
+            "format": "date-time"
+          },
+          "messages": {
+            "type": "array",
+            "description": "List of error messages",
+            "example": [
+              {
+                "object": "Transfer",
+                "field": "value",
+                "message": "deve ser maior que zero"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ErrorMessage"
+            }
+          },
+          "path": {
+            "type": "string",
+            "description": "Path of the call that caused the error",
+            "example": "\\path"
+          },
+          "statusCode": {
+            "type": "integer",
+            "description": "Status code",
+            "format": "int32",
+            "example": 404
+          },
+          "statusDescription": {
+            "type": "string",
+            "description": "Status Description",
+            "example": "Resource not found"
+          },
+          "exception": {
+            "type": "string",
+            "description": "Thrown exception",
+            "example": "NotFoundException"
+          }
+        },
+        "description": "Not found error response"
       },
       "AccountHolderResponse": {
         "type": "object",
