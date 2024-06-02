@@ -65,7 +65,7 @@
           "200": {
             "description": "Transferencia concluida com sucesso",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "string"
                 }
@@ -75,7 +75,7 @@
           "400": {
             "description": "Requisicao invalida",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomException"
                 }
@@ -85,7 +85,7 @@
           "404": {
             "description": "Recurso nao encontrado",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomException"
                 }
@@ -95,7 +95,7 @@
           "422": {
             "description": "Entidade nao processavel",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomException"
                 }
@@ -105,7 +105,7 @@
           "500": {
             "description": "Erro interno do sistema",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomException"
                 }
@@ -151,7 +151,7 @@
           "200": {
             "description": "Conta encontrada",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AccountResponse"
                 }
@@ -161,7 +161,7 @@
           "400": {
             "description": "Requisicao invalida",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomException"
                 }
@@ -171,7 +171,7 @@
           "404": {
             "description": "Recurso nao encontrado",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomException"
                 }
@@ -181,7 +181,7 @@
           "500": {
             "description": "Erro interno do sistema",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomException"
                 }
