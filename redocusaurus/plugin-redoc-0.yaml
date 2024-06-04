@@ -11,28 +11,13 @@ tags:
   - name: Transferencias
     description: Realizar Transferencias
 paths:
-  /transferencias/{idDebit}/contas/{idCredit}:
+  /transferencias:
     post:
       tags:
         - Transferencias
       summary: Efetiva a transferencia
       description: Transmite o valor da conta de debito para a conta de credito
       operationId: transfer
-      parameters:
-        - name: idDebit
-          in: path
-          description: Id da conta de debito
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: idCredit
-          in: path
-          description: Id da conta de credito
-          required: true
-          schema:
-            type: integer
-            format: int32
       requestBody:
         content:
           application/json:
@@ -41,11 +26,11 @@ paths:
         required: true
       responses:
         '200':
-          description: Transferencia concluida com sucesso
+          description: Transferencia realizada com sucesso
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/TransferResponse'
         '400':
           description: Requisicao invalida
           content:
@@ -171,16 +156,37 @@ components:
   schemas:
     AccountTransferRequest:
       required:
+        - accountCredit
+        - accountDebit
         - transferValue
       type: object
       properties:
+        accountDebit:
+          minimum: 1
+          type: integer
+          description: Conta Debito
+          format: int32
+          example: 1
+        accountCredit:
+          minimum: 1
+          type: integer
+          description: Conta Credito
+          format: int32
+          example: 1
         transferValue:
           minimum: 0.01
           exclusiveMinimum: false
           type: number
           description: Valor da transferencia
           example: 10
-      description: Valor da transferencia
+      description: Dados da transferencia
+    TransferResponse:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          description: Resposta da solicitação
+          example: Transferencia realizada com sucesso
     ErrorMessage:
       type: object
       properties:
@@ -201,108 +207,6 @@ components:
         - object: Transfer
           field: value
           message: deve ser maior que zero
-    NotFoundError:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          description: Error Datetime
-          format: date-time
-        messages:
-          type: array
-          description: List of error messages
-          example:
-            - object: Transfer
-              field: value
-              message: deve ser maior que zero
-          items:
-            $ref: '#/components/schemas/ErrorMessage'
-        path:
-          type: string
-          description: Path of the call that caused the error
-          example: \path
-        statusCode:
-          type: integer
-          description: Status code
-          format: int32
-          example: 404
-        statusDescription:
-          type: string
-          description: Status Description
-          example: Resource not found
-        exception:
-          type: string
-          description: Thrown exception
-          example: NotFoundException
-      description: Not found error response
-    UnprocessableEntityError:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          description: Error Datetime
-          format: date-time
-        messages:
-          type: array
-          description: List of error messages
-          example:
-            - object: Transfer
-              field: value
-              message: deve ser maior que zero
-          items:
-            $ref: '#/components/schemas/ErrorMessage'
-        path:
-          type: string
-          description: Path of the call that caused the error
-          example: \path
-        statusCode:
-          type: integer
-          description: Status code
-          format: int32
-          example: 422
-        statusDescription:
-          type: string
-          description: Status Description
-          example: Unprocessable entity
-        exception:
-          type: string
-          description: Thrown exception
-          example: UnprocessableEntityException
-      description: UI Unprocessable entity error response
-    BadRequestError:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          description: Error Datetime
-          format: date-time
-        messages:
-          type: array
-          description: List of error messages
-          example:
-            - object: Transfer
-              field: value
-              message: deve ser maior que zero
-          items:
-            $ref: '#/components/schemas/ErrorMessage'
-        path:
-          type: string
-          description: Path of the call that caused the error
-          example: \path
-        statusCode:
-          type: integer
-          description: Status code
-          format: int32
-          example: 400
-        statusDescription:
-          type: string
-          description: Status Description
-          example: Invalid request
-        exception:
-          type: string
-          description: Thrown exception
-          example: BadRequestException
-      description: Bad request error response
     InternalServerError:
       type: object
       properties:
@@ -337,6 +241,108 @@ components:
           description: Thrown exception
           example: internalServerErrorException
       description: Internal server error response
+    UnprocessableEntityError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Error Datetime
+          format: date-time
+        messages:
+          type: array
+          description: List of error messages
+          example:
+            - object: Transfer
+              field: value
+              message: deve ser maior que zero
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+        path:
+          type: string
+          description: Path of the call that caused the error
+          example: \path
+        statusCode:
+          type: integer
+          description: Status code
+          format: int32
+          example: 422
+        statusDescription:
+          type: string
+          description: Status Description
+          example: Unprocessable entity
+        exception:
+          type: string
+          description: Thrown exception
+          example: UnprocessableEntityException
+      description: UI Unprocessable entity error response
+    NotFoundError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Error Datetime
+          format: date-time
+        messages:
+          type: array
+          description: List of error messages
+          example:
+            - object: Transfer
+              field: value
+              message: deve ser maior que zero
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+        path:
+          type: string
+          description: Path of the call that caused the error
+          example: \path
+        statusCode:
+          type: integer
+          description: Status code
+          format: int32
+          example: 404
+        statusDescription:
+          type: string
+          description: Status Description
+          example: Resource not found
+        exception:
+          type: string
+          description: Thrown exception
+          example: NotFoundException
+      description: Not found error response
+    BadRequestError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Error Datetime
+          format: date-time
+        messages:
+          type: array
+          description: List of error messages
+          example:
+            - object: Transfer
+              field: value
+              message: deve ser maior que zero
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+        path:
+          type: string
+          description: Path of the call that caused the error
+          example: \path
+        statusCode:
+          type: integer
+          description: Status code
+          format: int32
+          example: 400
+        statusDescription:
+          type: string
+          description: Status Description
+          example: Invalid request
+        exception:
+          type: string
+          description: Thrown exception
+          example: BadRequestException
+      description: Bad request error response
     AccountHolderResponse:
       type: object
       properties:
