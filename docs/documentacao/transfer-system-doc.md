@@ -92,33 +92,40 @@ Acesse no swagger a área de Realizar Transferencias
 - Troque o valor da transferência por 300:
 ```json
 {
-	"valorTransferencia": 300
+  "valorTransferencia": 300
 }
 ```
 - Clique em `execute`
 - Você receberá o retorno:
 ```json
 {
-  "timestamp": "2024-01-xxT22:46:59.374Z",
-  "exception": "NegocioException",
+  "timestamp": "2024-06-04T08:43:41.356-03:00",
   "messages": [
-    "Saldo insuficiente."
+    {
+      "message": "Saldo insuficiente."
+    }
   ],
-  "path": "/transferencias/2/contas/1"
+  "path": "/transferencias",
+  "statusCode": 422,
+  "statusDescription": "Unprocessable Entity",
+  "exception": "BusinessException"
 }
-
 ```
 - Altere os ids e transfira os 300, você receberá a seguinte mensagem:
   `Transferencia realizada com sucesso`
 - Se você transferir mais 701 receberá a seguinte mensagem:
 ```json
 {
-  "timestamp": "2024-01-12T22:50:33.385Z",
-  "exception": "NegocioException",
+  "timestamp": "2024-06-04T08:42:48.969-03:00",
   "messages": [
-    "Transacao acima do limite diario restante: R$700.00 ."
+    {
+      "message": "Transacao acima do limite diario restante: R$700.00"
+    }
   ],
-  "path": "/transferencias/1/contas/2"
+  "path": "/transferencias",
+  "statusCode": 422,
+  "statusDescription": "Unprocessable Entity",
+  "exception": "BusinessException"
 }
 ```
 
